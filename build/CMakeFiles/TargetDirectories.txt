@@ -1,0 +1,3 @@
+/home/fyt/fla/build/CMakeFiles/fla.dir
+/home/fyt/fla/build/CMakeFiles/edit_cache.dir
+/home/fyt/fla/build/CMakeFiles/rebuild_cache.dir
