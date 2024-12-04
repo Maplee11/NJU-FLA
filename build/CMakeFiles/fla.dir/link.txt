@@ -1,1 +1,0 @@
-/usr/bin/c++ "CMakeFiles/fla.dir/fla-project/main.cpp.o" -o /home/fyt/fla/bin/fla 
