@@ -1,4 +1,1 @@
-cd build
-make
-cd ../bin
-./fla
+cd build && make && cd ../bin && ./fla $1 $2
