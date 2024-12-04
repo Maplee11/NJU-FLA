@@ -32,9 +32,11 @@ int main(int argc, char* argv[]) {
     if (ext == "pda") {
         PDA pda(input_file);
         cout << pda.simulate(input_str) << endl;
-    } else if (ext == "tm") {
+    }
+    else if (ext == "tm") {
         cerr << "Undone" <<endl;
-    } else {
+    }
+    else {
         cerr << "Invalid input file extension." << endl;
     }
 
