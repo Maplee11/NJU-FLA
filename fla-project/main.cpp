@@ -1,5 +1,6 @@
 #include <iostream>
 #include <pda.h>
+#include <tm.h>
 
 using std::cerr;
 using std::cout;
@@ -23,11 +24,14 @@ std::vector<string> split(char spliter, string input) {
 }
 
 
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[]) {    
     if (argc < 2) {
         cerr << "Too few arguements." << endl;
         return 1;
     }
+
+    bool verbose = false;
+    int offset = 1;
 
     if (string(argv[1]) == "-h" || string(argv[1]) == "--help") {
         cout << "usage:   fla [-h|--help] <pda> <input>" << endl;
@@ -35,21 +39,27 @@ int main(int argc, char* argv[]) {
         return 0;
     }
 
-    if (argc < 3) {
+    if (string(argv[1]) == "-v" || string(argv[1]) == "--verbose") {
+        verbose = true;
+        offset++;
+    }
+
+    if (argc - offset < 2) {
         cerr << "Too few arguements." << endl;
         return 1;
     }
 
-    string ext = split('.', argv[1]).back();
-    string input_file = argv[1];
-    string input_str = argv[2];
+    string ext = split('.', argv[offset]).back();
+    string input_file = argv[offset];
+    string input_str = argv[offset+1];
 
     if (ext == "pda") {
         PDA pda(input_file);
         cout << pda.simulate(input_str) << endl;
     }
     else if (ext == "tm") {
-        cerr << "Undone" <<endl;
+        TM tm(input_file, verbose);
+        cout << tm.simulate(input_str) << endl;
     }
     else {
         cerr << "Invalid input file extension." << endl;

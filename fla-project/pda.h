@@ -39,7 +39,7 @@ public:
             }
 
             if (inputSymbols.find(curSymbol) == inputSymbols.end() && curSymbol != "_") {
-                cerr << "Illegal input." << endl;
+                cerr << "illegal input" << endl;
                 exit(1);
             } 
 
