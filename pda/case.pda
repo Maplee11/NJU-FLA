@@ -1,0 +1,23 @@
+#Q = {q0,accept}
+
+; the finite set of input symbols
+#S = {(,)}
+
+; the complete set of stack symbols
+#G = {x}
+
+; the start state
+#q0 = q0
+
+; the start stack symbol
+#z0 = z
+
+; the set of final states
+#F = {accept}
+
+; the transition functions
+
+q0 ( z q0 xz
+q0 ( x q0 xx
+q0 ) x q0 _
+q0 _ z accept _

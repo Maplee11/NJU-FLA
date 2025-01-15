@@ -7,6 +7,10 @@ using std::endl;
 using std::string;
 
 std::vector<string> split(char spliter, string input) {
+    if (input.find(string(string(1, spliter))) == string::npos) {
+        return {input};
+    }
+
     std::vector<string> ret;
     int l = 0, r = 0;
     while (r != input.size()) {
@@ -20,9 +24,20 @@ std::vector<string> split(char spliter, string input) {
 
 
 int main(int argc, char* argv[]) {
+    if (argc < 2) {
+        cerr << "Too few arguements." << endl;
+        return 1;
+    }
+
+    if (string(argv[1]) == "-h" || string(argv[1]) == "--help") {
+        cout << "usage:   fla [-h|--help] <pda> <input>" << endl;
+        cout << "         fla [-v|--verbose] [-h|--help] <tm> <input>" << endl;
+        return 0;
+    }
+
     if (argc < 3) {
         cerr << "Too few arguements." << endl;
-        return 0;
+        return 1;
     }
 
     string ext = split('.', argv[1]).back();

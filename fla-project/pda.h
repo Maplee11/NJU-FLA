@@ -11,6 +11,7 @@
 
 using std::string;
 using std::cout;
+using std::cerr;
 using std::endl;
 
 std::vector<string> split(char spliter, string input);
@@ -36,6 +37,12 @@ public:
             } else {
                 curSymbol = string(1, input[ptr++]);
             }
+
+            if (inputSymbols.find(curSymbol) == inputSymbols.end() && curSymbol != "_") {
+                cerr << "Illegal input." << endl;
+                exit(1);
+            } 
+
             string key = curState + " " + curSymbol + " " + st.top();
             if (delta.find(key) == delta.end()) {
                 return "false";
@@ -64,6 +71,11 @@ private:
     void getSymbols(string pda_file_path) {
         std::ifstream file(pda_file_path);
         string line;
+
+        if (!file) {
+            cerr << "File doesn't exist." << endl;
+            exit(1);
+        }
 
         // Get states, symbols and transitions
         while (std::getline(file, line)) {
@@ -100,10 +112,17 @@ private:
                 delta[s[0] + " " + s[1] + " " + s[2]] = s[3] + " " + s[4];
             }
         }
+
         file.close();
     }
 
     std::set<string> scanSymbols(string input) {
+        if (input.find('{') == std::string::npos ||
+            input.find('}') == std::string::npos) {
+            cerr << "syntax error" << endl;
+            exit(1);
+        }
+
         int l = 0, r = 0;
         while (input[l] != '{') l++;
         while (input[r] != '}') r++;
