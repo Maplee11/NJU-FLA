@@ -56,6 +56,7 @@ echo -----
 ./fla ../tm/palindrome_detector_2tapes.tm 10101010101
 ./fla ../tm/palindrome_detector_2tapes.tm 10000000001
 ./fla ../tm/palindrome_detector_2tapes.tm 110000011
+./fla ../tm/palindrome_detector_2tapes.tm ""
 echo -----
 ./fla ../tm/palindrome_detector_2tapes.tm 1000010001
 ./fla ../tm/palindrome_detector_2tapes.tm 111011111
@@ -71,3 +72,5 @@ echo -----
 ./fla ../tm/palindrome_detector_2tapes.tm 110
 ./fla ../tm/palindrome_detector_2tapes.tm 01101
 ./fla ../tm/palindrome_detector_2tapes.tm 11111111111110
+echo ==============================
+./fla ../tm/a.tm 10101

@@ -47,6 +47,7 @@ class TM {
 public:
     TM(string tm_file_path, bool verbose_) : verbose(verbose_) {
         decodeFileTM(tm_file_path);
+        while (clearStarTransaction());
         tape = new std::map<int, char>[tapeNum];
         head = new int[tapeNum]();
     }
@@ -88,6 +89,24 @@ public:
     }
 
 private:
+    bool clearStarTransaction() {
+        for (auto it = delta.begin(); it != delta.end(); it++) {
+            Pa key = it->first;
+            Tup val = it->second;
+            int pos = key.second.find('*');
+            if (pos != string::npos) {
+                delta.erase(key);
+                for (string c : tapeSymbols) {
+                    key.second[pos] = c[0];
+                    delta[key] = val;
+                    // cout << "Add: " << key.first << " " << key.second << " " << std::get<0>(val) << " " << std::get<1>(val) << " " << std::get<2>(val) << endl;
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
     void moveLeft(int tapeIdx) {
         auto& tp = tape[tapeIdx];
         --head[tapeIdx];
@@ -126,7 +145,9 @@ private:
     }
 
     void write(int tapeIdx, char c) {
-        tape[tapeIdx][head[tapeIdx]] = c;
+        if (c != '*') {
+            tape[tapeIdx][head[tapeIdx]] = c;
+        }
     }
 
     char read(int tapeIdx) {
@@ -186,6 +207,11 @@ private:
         }
 
         file.close();
+
+        if (inputSymbols.find("*") != inputSymbols.end() || tapeSymbols.find("*") != tapeSymbols.end()) {
+            cerr << "syntax error" << endl;
+            exit(1);
+        }
     }
 
     std::set<string> scanSymbols(string input) {
@@ -231,12 +257,12 @@ private:
     }
 
     void tapeInitialize(string& input) {
-        for (int i = 0; i < int(input.size()); i++) {
-            tape[0][i] = input[i];
+        for (int i = 0; i < tapeNum; i++) {
+            tape[i][0] = blankSymbol;
         }
 
-        for (int i = 1; i < tapeNum; i++) {
-            tape[i][0] = blankSymbol;
+        for (int i = 0; i < int(input.size()); i++) {
+            tape[0][i] = input[i];
         }
     }
 
