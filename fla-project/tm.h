@@ -64,12 +64,12 @@ public:
 
         string curState = startState, newSymbols, moves, nxtState;
 
-        // TODO: * match
-        while (1) {
+        for (int step = 0; ; step++) {
+            printState(step, curState);
             Pa key = Pa(curState, readAllSymbols());
 
             if (delta.find(key) == delta.end()) {
-                return getTapeContent(0);
+                return replaceSpace(getTapeContent(0));
             }
 
             Tup val = delta[key];
@@ -89,6 +89,47 @@ public:
     }
 
 private:
+    void printState(int step, string curState) {
+        if (!verbose) return;
+        cout << "Step   : " << step << endl;
+        cout << "State  : " << curState << endl;
+
+        for (int i = 0; i < tapeNum; i++) {
+            auto& tp = tape[i];
+
+            cout << "Index" << i << " : ";
+            int l = head[i], r = head[i];
+            while (tp.find(l-1) != tp.end()) l--;
+            while (tp.find(r+1) != tp.end()) r++;
+            while (tp[l] == blankSymbol && l < head[i]) l++;
+            while (tp[r] == blankSymbol && r > head[i]) r--;
+            for (int j = l; j <= r; j++) {
+                cout << std::max(j, -j) << " ";
+            }
+            cout << endl;
+
+            cout << "Tape" << i << "  : ";
+            for (int j = l; j <= r; j++) {
+                cout << tp[j] << " ";
+                if (std::max(j, -j) >= 10) cout << " ";
+                if (std::max(j, -j) >= 100) cout << " ";
+            }
+            cout << endl;
+
+            cout << "Head" << i << "  : ";
+            int alignOffset = 0;
+            for (int j = l; j < head[i]; j++) {
+                alignOffset += ((std::max(j, -j) >= 10) + (std::max(j, -j) >= 100));
+            }
+            for (int j = 0; j < 2*(head[i]-l)+alignOffset; j++) {
+                cout << " ";
+            }
+            cout << "^" << endl;
+        }
+
+        cout << "---------------------------------------------" << endl;
+    }
+
     bool clearStarTransaction() {
         for (auto it = delta.begin(); it != delta.end(); it++) {
             Pa key = it->first;
@@ -271,10 +312,11 @@ private:
         string ret = "";
 
         if (!tp.empty()) {
-            for (auto i = tp.begin(); i != tp.end(); i++) {
-                if (i->second != blankSymbol) {
-                    ret.push_back(i->second);
-                }
+            int l = tp.begin()->first, r = tp.rbegin()->first;
+            while (tp[l] == blankSymbol) l++;
+            while (tp[r] == blankSymbol) r--;
+            for (int i = l; i <= r; i++) {
+                ret.push_back(tp[i]);
             }
         }
 

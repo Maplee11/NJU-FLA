@@ -59,7 +59,10 @@ int main(int argc, char* argv[]) {
     }
     else if (ext == "tm") {
         TM tm(input_file, verbose);
-        cout << tm.simulate(input_str) << endl;
+        string res = tm.simulate(input_str);
+        if (verbose) cout << "Result: ";
+        cout << res << endl;
+        if (verbose) cout << "==================== END ====================" << endl;
     }
     else {
         cerr << "Invalid input file extension." << endl;
