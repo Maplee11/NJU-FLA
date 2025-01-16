@@ -72,5 +72,5 @@ echo -----
 ./fla ../tm/palindrome_detector_2tapes.tm 110
 ./fla ../tm/palindrome_detector_2tapes.tm 01101
 ./fla ../tm/palindrome_detector_2tapes.tm 11111111111110
-echo ==============================
-./fla ../tm/a.tm 10101
+echo ========================
+./fla ../tm/palindrome_detector_2tapes.tm 1001001
