@@ -1,5 +1,5 @@
 cd build && make && cd ../bin
-
+echo ========================
 ./fla ../pda/anbn.pda aaaaaabbbbbb
 ./fla ../pda/anbn.pda aaabbb
 ./fla ../pda/anbn.pda aabb
@@ -16,9 +16,7 @@ echo -----
 ./fla ../pda/anbn.pda acb
 ./fla ./pda/anbn.pda ab
 ./fla ./pda/anbn.pd ab
-
-echo ---CASE---
-
+echo ========================
 ./fla ../pda/case.pda ""
 ./fla ../pda/case.pda "()"
 ./fla ../pda/case.pda "(())"
@@ -33,7 +31,7 @@ echo -----
 echo -----
 ./fla ../pda/case.pda "(a)()"
 ./fla ../pda/case.pda "-"
-echo -----
+echo ========================
 ./fla ../tm/palindrome_detector_2tapes.tm 1
 ./fla ../tm/palindrome_detector_2tapes.tm 0
 ./fla ../tm/palindrome_detector_2tapes.tm 101
@@ -75,6 +73,7 @@ echo -----
 echo ========================
 # ./fla --verbose ../tm/palindrome_detector_2tapes.tm 1001001
 # ./fla --verbose ../tm/case1.tm aabbb
+echo ========================
 ./fla ../tm/case1.tm ab
 ./fla ../tm/case1.tm aabb
 ./fla ../tm/case1.tm aaabb
@@ -82,3 +81,22 @@ echo ========================
 ./fla ../tm/case1.tm abbba
 ./fla ../tm/case1.tm bab
 ./fla ../tm/case1.tm aba
+echo ========================
+./fla ../tm/case2.tm ""
+./fla ../tm/case2.tm 111
+./fla ../tm/case2.tm 11111
+./fla ../tm/case2.tm 11111111
+./fla ../tm/case2.tm 11111111111
+./fla ../tm/case2.tm 1111111111111
+./fla ../tm/case2.tm 111111111111111111111111111
+./fla ../tm/case2.tm 1111111111111111111111111111111111111
+echo -----
+./fla ../tm/case2.tm 1
+./fla ../tm/case2.tm 1111
+./fla ../tm/case2.tm 111111111
+./fla ../tm/case2.tm 1111111111111111
+./fla ../tm/case2.tm 1111111111111111111111111
+./fla ../tm/case2.tm 111111111111111111111111111111111111
+./fla ../tm/case2.tm 1111111111111111111111111111111111111111111111111
+echo =============== TEST DONE ===============
+# ./fla -v ../tm/case2.tm 1111111111111111111111111
