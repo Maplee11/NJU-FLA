@@ -103,7 +103,7 @@ echo -----
 ./fla ../tm/case2.tm 1111111111111111111111111111111111111111111111111
 echo =============== TEST DONE ===============
 # ./fla -v -h p
-# ./fla -v ../tm/case2.tm 11111111
-# ./fla -v ../pda/anbn.pda aaaaaaaaaabbbbbbbbbb
+# ./fla -v ../tm/case2.tm 111111111
+./fla -v ../pda/anbn.pda aaaaaaaaaabbbbbbbbbb
 # ./fla -v ../pda/case.pda "((()()()())()(())())(((()()((())()))(())())())()((()))()"
 # ./fla -v ../pda/case.pda "((()()()()()(())()((()()(((()))(())())())()((()))()"
