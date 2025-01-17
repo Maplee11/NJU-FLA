@@ -54,8 +54,11 @@ int main(int argc, char* argv[]) {
     string input_str = argv[offset+1];
 
     if (ext == "pda") {
-        PDA pda(input_file);
-        cout << pda.simulate(input_str) << endl;
+        PDA pda(input_file, verbose);
+        string res = pda.simulate(input_str);
+        if (verbose) cout << "Result: ";
+        cout << res << endl;
+        if (verbose) cout << "==================== END ====================" << endl;
     }
     else if (ext == "tm") {
         TM tm(input_file, verbose);

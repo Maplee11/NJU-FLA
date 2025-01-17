@@ -1,5 +1,5 @@
 cd build && make && cd ../bin
-echo ========================
+echo ========== ANBN ==============
 ./fla ../pda/anbn.pda aaaaaabbbbbb
 ./fla ../pda/anbn.pda aaabbb
 ./fla ../pda/anbn.pda aabb
@@ -16,7 +16,7 @@ echo -----
 ./fla ../pda/anbn.pda acb
 ./fla ./pda/anbn.pda ab
 ./fla ./pda/anbn.pd ab
-echo ========================
+echo ========== CASE1 ==============
 ./fla ../pda/case.pda ""
 ./fla ../pda/case.pda "()"
 ./fla ../pda/case.pda "(())"
@@ -31,7 +31,7 @@ echo -----
 echo -----
 ./fla ../pda/case.pda "(a)()"
 ./fla ../pda/case.pda "-"
-echo ========================
+echo =========== PALINDROME =============
 ./fla ../tm/palindrome_detector_2tapes.tm 1
 ./fla ../tm/palindrome_detector_2tapes.tm 0
 ./fla ../tm/palindrome_detector_2tapes.tm 101
@@ -70,18 +70,19 @@ echo -----
 ./fla ../tm/palindrome_detector_2tapes.tm 110
 ./fla ../tm/palindrome_detector_2tapes.tm 01101
 ./fla ../tm/palindrome_detector_2tapes.tm 11111111111110
-echo ========================
+# echo ========================
 # ./fla --verbose ../tm/palindrome_detector_2tapes.tm 1001001
 # ./fla --verbose ../tm/case1.tm aabbb
-echo ========================
+echo =========== CASE1 =============
 ./fla ../tm/case1.tm ab
 ./fla ../tm/case1.tm aabb
 ./fla ../tm/case1.tm aaabb
 ./fla ../tm/case1.tm aaaabbb
+echo -----
 ./fla ../tm/case1.tm abbba
 ./fla ../tm/case1.tm bab
 ./fla ../tm/case1.tm aba
-echo ========================
+echo ========== CASE2 ==============
 ./fla ../tm/case2.tm ""
 ./fla ../tm/case2.tm 111
 ./fla ../tm/case2.tm 11111
@@ -99,4 +100,4 @@ echo -----
 ./fla ../tm/case2.tm 111111111111111111111111111111111111
 ./fla ../tm/case2.tm 1111111111111111111111111111111111111111111111111
 echo =============== TEST DONE ===============
-# ./fla -v ../tm/case2.tm 1111111111111111111111111
+./fla -v ../pda/anbn.pda aaabbb

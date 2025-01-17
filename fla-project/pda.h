@@ -18,56 +18,102 @@ std::vector<string> split(char spliter, string input);
 
 
 class PDA {
+    std::unordered_map<string, string> delta;
+    string startState, startStackSymbol;
+    std::set<string> states, inputSymbols, stackSymbols, finalStates;
+    bool verbose;
+
 public:
-    PDA(string pda_file_path) {
+    PDA(string pda_file_path, bool verbose_) : verbose(verbose_) {
         getSymbols(pda_file_path);
     }
 
     string simulate(string input) {
+        checkInput(input);
+        verboseInitial(input);
+
         string curState = startState;
-        std::stack<string> st;
-        int ptr = 0;
-        st.push(startStackSymbol);
-        
-        while (ptr != -1) {
-            string curSymbol;
-            if (ptr == input.size()) {
-                curSymbol = "_";
-                ptr = -1;
-            } else {
-                curSymbol = string(1, input[ptr++]);
+        std::stack<string> st({startStackSymbol});
+        int ptr = 0, step = 0;
+
+        while (1) {
+            printState(curState, ptr, step++, st, input);
+
+            if (finalStates.find(curState) != finalStates.end())
+                return "true";
+
+            if (st.empty()) {
+                return "false";
             }
 
-            if (inputSymbols.find(curSymbol) == inputSymbols.end() && curSymbol != "_") {
-                cerr << "illegal input" << endl;
-                exit(1);
-            } 
-
+            string curSymbol = (ptr == input.size()) ? "_" : string(1, input[ptr++]);
             string key = curState + " " + curSymbol + " " + st.top();
+
             if (delta.find(key) == delta.end()) {
                 return "false";
             }
 
-            // cout<<key<<"->"<<delta[key]<<endl;
-
             auto s = split(' ', delta[key]);
             curState = s[0];
             st.pop();
-            if (s[1][0] == '_' && s[1].size() == 1) {
-                continue;
-            }
-            for (int i = s[1].size()-1; i >=0; i--) {
-                st.push(string(1, s[1][i]));
+
+            if (s[1][0] != '_') {
+                for (int i = s[1].size()-1; i >=0; i--) {
+                    st.push(string(1, s[1][i]));
+                }
             }
         }
-
-        if (finalStates.find(curState) != finalStates.end())
-            return "true";
-        else
-            return "false";
     }
 
 private:
+    void printState(string curState, int ptr, int step, std::stack<string> st, string input) {
+        if (!verbose) return;
+        cout << "Step   : " << step << endl;
+        cout << "State  : " << curState << endl;
+        
+        cout << "Stack  : ";
+        while (!st.empty()) {
+            cout << st.top() << " ";
+            st.pop();
+        }
+        cout << endl;
+
+        cout << "Input  : " << input;
+        if (ptr == int(input.size())) cout << "_";
+        cout << endl;
+        cout << "Head   : ";
+        for (int _ = 0; _ < ptr; _++) cout << " ";
+        cout << "^" << endl;
+
+        cout << "---------------------------------------------" << endl;
+    }
+
+    void verboseInitial(string& input) {
+        if (verbose) {
+            cout << "Input: " << input << endl;
+            cout << "==================== RUN ====================" << endl;
+        }
+    }
+
+    void checkInput(string& input) {
+        for (int i = 0; i < int(input.size()); i++) {
+            char c = input[i];
+            if (inputSymbols.find(string(1, c)) == inputSymbols.end()) {
+                if (!verbose) {
+                    cerr << "illegal input" << endl;
+                    exit(1);
+                }
+                cerr << "Input: " << input << endl;
+                cerr << "==================== ERR ====================" << endl;
+                cerr << "error: " << "'" << c << "'" << " was not declared in the set of input symbols" << endl;
+                cerr << "Input: " << input << endl;
+                for (int _ = 0; _ < i + 7; _++) cerr << " "; cerr << "^" << endl;
+                cerr << "==================== END ====================" << endl;
+                exit(1);
+            }
+        }
+    }
+
     void getSymbols(string pda_file_path) {
         std::ifstream file(pda_file_path);
         string line;
@@ -131,9 +177,4 @@ private:
         // cout<<"Scanned: "; for (auto it : s) cout<<it<<" "; cout<<endl;
         return std::set<string>(s.begin(), s.end());
     }
-
-    double a;
-    std::unordered_map<string, string> delta;
-    string startState, startStackSymbol;
-    std::set<string> states, inputSymbols, stackSymbols, finalStates;
 };
