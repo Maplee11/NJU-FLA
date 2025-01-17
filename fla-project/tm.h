@@ -50,6 +50,7 @@ public:
         while (clearStarTransaction());
         tape = new std::map<int, char>[tapeNum];
         head = new int[tapeNum]();
+        cout<<states.size()<<endl;
     }
 
     ~TM() {

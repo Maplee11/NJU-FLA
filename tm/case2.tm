@@ -1,4 +1,4 @@
-#Q = {halt_accept,cp,erase1,erase2,start,find_b,write,move_right,0,check_a,check_b,reject,erase,write_illegal1,write_illegal2,write_illegal3,write_illegal4,write_illegal5,write_illegal6,write_illegal7,write_illegal8,write_illegal9,write_illegal10,write_illegal11,write_illegal12,write_illegal13}
+#Q = {0,check_a,check_b,reject,done_check,erase,halt_reject,write_illegal1,write_illegal2,write_illegal3,write_illegal4,write_illegal5,write_illegal6,write_illegal7,write_illegal8,write_illegal9,write_illegal10,write_illegal11,write_illegal12,write_illegal13}
 
 #S = {a,b}
 
@@ -38,6 +38,7 @@ write_illegal5 __ g_ r* write_illegal6
 write_illegal6 __ a_ r* write_illegal7
 write_illegal7 __ l_ r* write_illegal8
 write_illegal8 __ __ r* write_illegal9
+
 write_illegal9 __ i_ r* write_illegal10
 write_illegal10 __ n_ r* write_illegal11
 write_illegal11 __ p_ r* write_illegal12
@@ -64,4 +65,4 @@ move_right _* _* *r move_right
 move_right __ __ *l start
 
 erase2 _* __ *l erase2
-erase2 __ __ lr halt_accept
+erase2 __ __ lr finish
