@@ -47,7 +47,7 @@ private:
         while (1) {
             printState(curState, ptr, step++, st, input);
 
-            if (finalStates.find(curState) != finalStates.end())
+            if (finalStates.find(curState) != finalStates.end() && ptr == input.size())
                 return "true";
 
             if (st.empty()) {
@@ -58,7 +58,13 @@ private:
             string key = curState + " " + curSymbol + " " + st.top();
 
             if (delta.find(key) == delta.end()) {
-                return "false";
+                if (curSymbol != "_") {
+                    key = curState + " " + "_" + " " + st.top();
+                    ptr--;
+                }
+                if (delta.find(key) == delta.end()) {
+                    return "false";
+                }
             }
 
             auto s = split(' ', delta[key]);
