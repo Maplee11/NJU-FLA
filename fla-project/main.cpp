@@ -8,7 +8,7 @@ using std::endl;
 using std::string;
 
 std::vector<string> split(char spliter, string input) {
-    if (input.find(string(string(1, spliter))) == string::npos) {
+    if (input.find(spliter) == string::npos) {
         return {input};
     }
 
@@ -33,11 +33,15 @@ int main(int argc, char* argv[]) {
     bool verbose = false;
     int offset = 1;
 
-    if (string(argv[1]) == "-h" || string(argv[1]) == "--help") {
-        cout << "usage:   fla [-h|--help] <pda> <input>" << endl;
-        cout << "         fla [-v|--verbose] [-h|--help] <tm> <input>" << endl;
-        return 0;
+    for (int i = 0; i < argc; i++) {
+        string s = string(argv[i]);
+        if (s == "-h" || s == "--help") {
+            cout << "usage:   fla [-h|--help] <pda> <input>" << endl;
+            cout << "         fla [-v|--verbose] [-h|--help] <tm> <input>" << endl;
+            return 0;
+        }
     }
+
 
     if (string(argv[1]) == "-v" || string(argv[1]) == "--verbose") {
         verbose = true;
@@ -55,17 +59,11 @@ int main(int argc, char* argv[]) {
 
     if (ext == "pda") {
         PDA pda(input_file, verbose);
-        string res = pda.simulate(input_str);
-        if (verbose) cout << "Result: ";
-        cout << res << endl;
-        if (verbose) cout << "==================== END ====================" << endl;
+        pda.simulate(input_str);
     }
     else if (ext == "tm") {
         TM tm(input_file, verbose);
-        string res = tm.simulate(input_str);
-        if (verbose) cout << "Result: ";
-        cout << res << endl;
-        if (verbose) cout << "==================== END ====================" << endl;
+        tm.simulate(input_str);
     }
     else {
         cerr << "Invalid input file extension." << endl;

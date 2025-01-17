@@ -70,15 +70,16 @@ echo -----
 ./fla ../tm/palindrome_detector_2tapes.tm 110
 ./fla ../tm/palindrome_detector_2tapes.tm 01101
 ./fla ../tm/palindrome_detector_2tapes.tm 11111111111110
-# echo ========================
-# ./fla --verbose ../tm/palindrome_detector_2tapes.tm 1001001
-# ./fla --verbose ../tm/case1.tm aabbb
+echo -----
+./fla ../tm/palindrome_detector_2tapes.tm 10000140001
+./fla ../tm/palindrome_detector_2tapes.tm a0000140001
 echo =========== CASE1 =============
 ./fla ../tm/case1.tm ab
 ./fla ../tm/case1.tm aabb
 ./fla ../tm/case1.tm aaabb
 ./fla ../tm/case1.tm aaaabbb
 echo -----
+./fla ../tm/case1.tm ""
 ./fla ../tm/case1.tm abbba
 ./fla ../tm/case1.tm bab
 ./fla ../tm/case1.tm aba
@@ -100,4 +101,8 @@ echo -----
 ./fla ../tm/case2.tm 111111111111111111111111111111111111
 ./fla ../tm/case2.tm 1111111111111111111111111111111111111111111111111
 echo =============== TEST DONE ===============
-./fla -v ../pda/anbn.pda aaabbb
+# ./fla -v -h p
+# ./fla -v ../tm/case2.tm 11111111
+# ./fla -v ../pda/anbn.pda aaaaaaaaaabbbbbbbbbb
+# ./fla -v ../pda/case.pda "((()()()())()(())())(((()()((())()))(())())())()((()))()"
+# ./fla -v ../pda/case.pda "((()()()()()(())()((()()(((()))(())())())()((()))()"

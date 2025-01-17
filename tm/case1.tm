@@ -1,4 +1,4 @@
-#Q = {halt_accept,cp,erase1,erase2,start,find_b,write,move_right,0,check_a,check_b,reject,erase,write_illegal1,write_illegal2,write_illegal3,write_illegal4,write_illegal5,write_illegal6,write_illegal7,write_illegal8,write_illegal9,write_illegal10,write_illegal11,write_illegal12,write_illegal13}
+#Q = {halt_accept,halt_reject,cp,erase1,erase2,start,find_b,write,move_right,0,check_a,check_b,reject,erase,write_illegal1,write_illegal2,write_illegal3,write_illegal4,write_illegal5,write_illegal6,write_illegal7,write_illegal8,write_illegal9,write_illegal10,write_illegal11,write_illegal12,write_illegal13}
 
 #S = {a,b}
 

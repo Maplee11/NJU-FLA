@@ -45,7 +45,7 @@ class TM {
     bool verbose;
 
 public:
-    TM(string tm_file_path, bool verbose_) : verbose(verbose_) {
+    TM(string tm_file_path, bool verbose_) : verbose(verbose_), blankSymbol('?'), tapeNum(-1) {
         decodeFileTM(tm_file_path);
         while (clearStarTransaction());
         tape = new std::map<int, char>[tapeNum];
@@ -57,7 +57,15 @@ public:
         delete [] head;
     }
 
-    string simulate(string input) {
+    void simulate(string input) {
+        string res = getResult(input);
+        if (verbose) cout << "Result: ";
+        cout << res << endl;
+        if (verbose) cout << "==================== END ====================" << endl;
+    }
+
+private:
+    string getResult(string& input) {
         checkInput(input);
         verboseInitial(input);
         tapeInitialize(input);
@@ -81,14 +89,11 @@ public:
             writeAllTapes(newSymbols);
             moveAllHeads(moves);
             curState = nxtState;
-
-            // cout << curState << newSymbols << " " << moves << " " << nxtState << endl;
         }
 
         return "Cannot reach here";
     }
 
-private:
     void printState(int step, string curState) {
         if (!verbose) return;
         cout << "Step   : " << step << endl;
@@ -221,29 +226,96 @@ private:
             if (line[0] == '#') {
                 char id = line[1];
                 if (id == 'Q') {
+                    if (!states.empty()) {
+                        cerr << "syntax error" << endl;
+                        exit(1);
+                    }
                     states = scanSymbols(line);
                 }
-                if (id == 'S') {
+                else if (id == 'S') {
+                    if (!inputSymbols.empty()) {
+                        cerr << "syntax error" << endl;
+                        exit(1);
+                    }
                     inputSymbols = scanSymbols(line);
                 }
-                if (id == 'G') {
+                else if (id == 'G') {
+                    if (!tapeSymbols.empty()) {
+                        cerr << "syntax error" << endl;
+                        exit(1);
+                    }
                     tapeSymbols = scanSymbols(line);
                 }
-                if (line[1] == 'q' && line[2] == '0') {
+                else if (line[1] == 'q' && line[2] == '0') {
+                    if (!startState.empty()) {
+                        cerr << "syntax error" << endl;
+                        exit(1);
+                    }
                     startState = line.substr(6, string::npos);
                 }
-                if (id == 'B') {
-                    blankSymbol = (line.substr(5, string::npos))[0];
+                else if (id == 'B') {
+                    if (blankSymbol != '?') {
+                        cerr << "syntax error" << endl;
+                        exit(1);
+                    }
+                    string tmp = line.substr(5, string::npos);
+                    if (tmp.size() != 1) {
+                        cerr << "syntax error" << endl;
+                        exit(1);
+                    }
+                    blankSymbol = tmp[0];
                 }
-                if (id == 'F') {
+                else if (id == 'F') {
+                    if (!haltStates.empty()) {
+                        cerr << "syntax error" << endl;
+                        exit(1);
+                    }
                     haltStates = scanSymbols(line);
                 }
-                if (id == 'N') {
+                else if (id == 'N') {
+                    if (tapeNum != -1) {
+                        cerr << "syntax error" << endl;
+                        exit(1);
+                    }
                     tapeNum = std::stoi(line.substr(5, string::npos));
+                }
+                else {
+                    cerr << "syntax error" << endl;
+                    exit(1);
                 }
             } else {
                 // Get transitions ( , , ) -> ( , )
                 std::vector<string> s = split(' ', line);
+                if (
+                    s.size() < 5 || \
+                    states.find(s[0]) == states.end() || \
+                    states.find(s[4]) == states.end()
+                ) {
+                    cerr << "syntax error" << endl;
+                    exit(1);
+                }
+
+                for (char c : s[1]) {
+                    if (c != '*' && tapeSymbols.find(string(1, c)) == tapeSymbols.end()) {
+                        cerr << "syntax error" << endl;
+                        exit(1);
+                    }
+                }
+
+                for (char c : s[2]) {
+                    if (c != '*' && tapeSymbols.find(string(1, c)) == tapeSymbols.end()) {
+                        cerr << "syntax error" << endl;
+                        exit(1);
+                    }
+                }
+
+                for (char c : s[3]) {
+                    if (c != '*' && c != 'l' && c != 'r') {
+                        cerr << "syntax error" << endl;
+                        exit(1);
+                    }
+                }
+
                 delta[Pa(s[0], s[1])] = Tup(s[2], s[3], s[4]);
             }
         }
@@ -254,21 +326,38 @@ private:
             cerr << "syntax error" << endl;
             exit(1);
         }
+
+        for (string s : inputSymbols) {
+            if (s.size() != 1) {
+                cerr << "syntax error" << endl;
+                exit(1);
+            }
+        }
+
+        for (string s : tapeSymbols) {
+            if (s.size() != 1) {
+                cerr << "syntax error" << endl;
+                exit(1);
+            }
+        }
+
+        for (string s : haltStates) {
+            if (states.find(s) == states.end()) {
+                cerr << "syntax error" << endl;
+                exit(1);
+            }
+        }
     }
 
     std::set<string> scanSymbols(string input) {
-        if (input.find('{') == std::string::npos ||
-            input.find('}') == std::string::npos) {
+        int l = input.find('{'), r = input.find('}');
+        if (l == string::npos || r == string::npos) {
             cerr << "syntax error" << endl;
             exit(1);
         }
 
-        int l = 0, r = 0;
-        while (input[l] != '{') l++;
-        while (input[r] != '}') r++;
         l++, r--;
         auto s = split(',', input.substr(l, r-l+1));
-        // cout<<"Scanned: "; for (auto it : s) cout<<it<<" "; cout<<endl;
         return std::set<string>(s.begin(), s.end());
     }
 
@@ -314,8 +403,10 @@ private:
 
         if (!tp.empty()) {
             int l = tp.begin()->first, r = tp.rbegin()->first;
-            while (tp[l] == blankSymbol) l++;
-            while (tp[r] == blankSymbol) r--;
+            if (l != r) {
+                while (tp[l] == blankSymbol) l++;
+                while (tp[r] == blankSymbol) r--;
+            }
             for (int i = l; i <= r; i++) {
                 ret.push_back(tp[i]);
             }

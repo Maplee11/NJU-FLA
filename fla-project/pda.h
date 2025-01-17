@@ -28,7 +28,15 @@ public:
         getSymbols(pda_file_path);
     }
 
-    string simulate(string input) {
+    void simulate(string input) {
+        string res = getResult(input);
+        if (verbose) cout << "Result: ";
+        cout << res << endl;
+        if (verbose) cout << "==================== END ====================" << endl;
+    }
+
+private:
+    string getResult(string& input) {
         checkInput(input);
         verboseInitial(input);
 
@@ -63,9 +71,10 @@ public:
                 }
             }
         }
-    }
 
-private:
+        return "Cannot reach here";
+    }
+    
     void printState(string curState, int ptr, int step, std::stack<string> st, string input) {
         if (!verbose) return;
         cout << "Step   : " << step << endl;
@@ -131,50 +140,113 @@ private:
             if (line[0] == '#') {
                 char id = line[1];
                 if (id == 'Q') {
+                    if (!states.empty()) {
+                        cerr << "syntax error" << endl;
+                        exit(1);
+                    }
                     states = scanSymbols(line);
                 }
-                if (id == 'S') {
+                else if (id == 'S') {
+                    if (!inputSymbols.empty()) {
+                        cerr << "syntax error" << endl;
+                        exit(1);
+                    }
                     inputSymbols = scanSymbols(line);
                 }
-                if (id == 'G') {
+                else if (id == 'G') {
+                    if (!stackSymbols.empty()) {
+                        cerr << "syntax error" << endl;
+                        exit(1);
+                    }
                     stackSymbols = scanSymbols(line);
                 }
-                if (id == 'F') {
+                else if (id == 'F') {
+                    if (!finalStates.empty()) {
+                        cerr << "syntax error" << endl;
+                        exit(1);
+                    }
                     finalStates = scanSymbols(line);
                 }
-                if (line[1] == 'q' && line[2] == '0') {
+                else if (line[1] == 'q' && line[2] == '0') {
+                    if (!startState.empty()) {
+                        cerr << "syntax error" << endl;
+                        exit(1);
+                    }
                     int ptr = line.size() - 1;
                     while (line[ptr] != ' ') ptr--;
                     startState = line.substr(ptr+1, line.size()-ptr-1);
                 }
-                if (line[1] == 'z' && line[2] == '0') {
+                else if (line[1] == 'z' && line[2] == '0') {
+                    if (!startStackSymbol.empty()) {
+                        cerr << "syntax error" << endl;
+                        exit(1);
+                    }
                     int ptr = line.size() - 1;
                     while (line[ptr] != ' ') ptr--;
                     startStackSymbol = line.substr(ptr+1, line.size()-ptr-1);
                 }
+                else {
+                    cerr << "syntax error" << endl;
+                    exit(1);
+                }
             } else {
                 // Get transitions ( , , ) -> ( , )
                 std::vector<string> s = split(' ', line);
+                if (
+                        s.size() < 5 || \
+                        states.find(s[0]) == states.end() || \
+                        states.find(s[3]) == states.end() || \
+                        (s[1] != "_" && inputSymbols.find(s[1]) == inputSymbols.end()) || \
+                        (s[2] != startStackSymbol && stackSymbols.find(s[2]) == stackSymbols.end()) \
+                    ) {
+                    cerr << "syntax error" << endl;
+                    exit(1);
+                }
+                
+                for (char c : s[4]) {
+                    if (c != '_' && string(1, c) != startStackSymbol && stackSymbols.find(string(1, c)) == stackSymbols.end()) {
+                        cerr << "syntax error" << endl;
+                        exit(1);
+                    }
+                }
+
                 delta[s[0] + " " + s[1] + " " + s[2]] = s[3] + " " + s[4];
             }
         }
 
         file.close();
+
+        for (string s : inputSymbols) {
+            if (s.size() != 1) {
+                cerr << "syntax error" << endl;
+                exit(1);
+            }
+        }
+
+        for (string s : stackSymbols) {
+            if (s.size() != 1) {
+                cerr << "syntax error" << endl;
+                exit(1);
+            }
+        }
+
+        for (string s : finalStates) {
+            if (states.find(s) == states.end()) {
+                cerr << "syntax error" << endl;
+                exit(1);
+            }
+        }
     }
 
     std::set<string> scanSymbols(string input) {
-        if (input.find('{') == std::string::npos ||
-            input.find('}') == std::string::npos) {
+        int l = input.find('{'), r = input.find('}');
+        if (l == string::npos || r == string::npos) {
             cerr << "syntax error" << endl;
             exit(1);
         }
 
-        int l = 0, r = 0;
-        while (input[l] != '{') l++;
-        while (input[r] != '}') r++;
         l++, r--;
         auto s = split(',', input.substr(l, r-l+1));
-        // cout<<"Scanned: "; for (auto it : s) cout<<it<<" "; cout<<endl;
         return std::set<string>(s.begin(), s.end());
     }
 };
