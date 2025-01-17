@@ -80,6 +80,7 @@ echo =========== CASE1 =============
 ./fla ../tm/case1.tm aaaabbb
 echo -----
 ./fla ../tm/case1.tm ""
+./fla ../tm/case1.tm abc
 ./fla ../tm/case1.tm abbba
 ./fla ../tm/case1.tm bab
 ./fla ../tm/case1.tm aba
