@@ -74,4 +74,11 @@ echo -----
 ./fla ../tm/palindrome_detector_2tapes.tm 11111111111110
 echo ========================
 # ./fla --verbose ../tm/palindrome_detector_2tapes.tm 1001001
-./fla --verbose ../tm/case1.tm aabbb
+# ./fla --verbose ../tm/case1.tm aabbb
+./fla ../tm/case1.tm ab
+./fla ../tm/case1.tm aabb
+./fla ../tm/case1.tm aaabb
+./fla ../tm/case1.tm aaaabbb
+./fla ../tm/case1.tm abbba
+./fla ../tm/case1.tm bab
+./fla ../tm/case1.tm aba

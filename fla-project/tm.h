@@ -138,6 +138,7 @@ private:
             if (pos != string::npos) {
                 delta.erase(key);
                 for (string c : tapeSymbols) {
+                    if (c[0] == '_') continue;
                     key.second[pos] = c[0];
                     delta[key] = val;
                     // cout << "Add: " << key.first << " " << key.second << " " << std::get<0>(val) << " " << std::get<1>(val) << " " << std::get<2>(val) << endl;
